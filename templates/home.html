@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>spaceX starlink Web UI</title>
+</head>
+<body>
+    <table>
+        <thead>
+        <tr>
+            <th>Satellite Id</th>
+            <th>Satellite Name</th>
+            <th>Comments</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            {% for value in info %}
+            <td>{{ value }}</td>
+            {% endfor %}
+        </tr>
+        </tbody>
+    </table>
+</body>
