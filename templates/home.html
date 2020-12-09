@@ -1,10 +1,41 @@
 <!DOCTYPE html>
 <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            $(`form`).submit(function (event) {
+
+                var formValues = {
+                    'satelliteName': $('input[name=satelliteName]').val(),
+                    'satelliteId': $('input[name=satelliteId]').val(),
+                    'xCoordinate': $('input[name=xCoordinate]').val(),
+                    'yCoordinate': $('input[name=yCoordinate]').val(),
+                    'comments': $('input[name=comments]').val()
+                };
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'http://127.0.0.1:8001/add/',
+                    data: formValues,
+                    dataType: 'json',
+                    encode: true
+                }).done(function (data) {
+                    console.log(data)
+                });
+                event.preventDefault();
+            });
+        });
+    </script>
+
     <meta charset="UTF-8">
     <title>spaceX starlink Web UI</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 </head>
 <body>
-    <table>
+<div class="container">
+    <table id="table1" class="table">
         <thead>
         <tr>
             <th>Satellite Id</th>
@@ -15,9 +46,47 @@
         <tbody>
         <tr>
             {% for value in info %}
-            <td>{{ value }}</td>
+                <td>{{ value }}</td>
             {% endfor %}
         </tr>
         </tbody>
     </table>
+</div>
+
+<br>
+
+<div class="container">
+    <div class="col-sm-6">
+        <div style="text-align: center;"><h3>Adding a satellite to the Constellation</h3></div>
+        <br>
+        <form id="satelliteAdd" class="form-horizontal">{% csrf_token %}
+
+            <div class="form-group">
+                <label for="satelliteName">Satellite Name :- </label>
+                <input class="form-control" type="text" id="satelliteName" name="satelliteName">
+            </div>
+            <div class="form-group">
+                <label for="satelliteId">Satellite ID :- </label>
+                <input class="form-control" type="number" id="satelliteId" name="satelliteId">
+            </div>
+            <div class="form-group">
+                <label for="xCoordinate">X Coordinate :- </label>
+                <input class="form-control" type="number" id="xCoordinate" name="xCoordinate">
+            </div>
+            <div class="form-group">
+                <label for="yCoordinate">Y Coordinate :- </label>
+                <input class="form-control" type="number" id="yCoordinate" name="yCoordinate">
+            </div>
+            <div class="form-group">
+                <label for="comments">Comments :- </label>
+                <input class="form-control" type="text" id="comments" name="comments">
+            </div>
+            <input type="submit" value="Add">
+
+        </form>
+    </div>
+</div>
+
+<br>
 </body>
+</html>
