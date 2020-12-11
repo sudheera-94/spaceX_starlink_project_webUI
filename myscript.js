@@ -1,12 +1,16 @@
-var rows = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-var cols = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 var board = $('#board');
+var prevX = 0;
+var prevY = 0;
 
+/**
+ * Creating a
+ * @constructor
+ */
 var Board = function () {
     var count = 0;
     for (var i = 0; i < 12; i++) {
         for (var j = 0; j < 12; j++) {
-            var idStr = j + ',' + (11-i);
+            var idStr = j + '-' + (11 - i);
             if (count % 12 == 0) {
                 board.append('<div class="spot" id="' + idStr + '" style="clear: left"><div>')
             } else {
@@ -57,15 +61,13 @@ $(document).ready(function () {
             crossDomain: true,
             success: function (data) {
                 console.log(data);
-                var satellite_data = '';
-                satellite_data += '<tr>';
-                satellite_data += '<td>' + data.satelliteName + '</td>';
-                satellite_data += '<td>' + data.satelliteId + '</td>';
-                satellite_data += '<td>' + data.xCoordinate + '</td>';
-                satellite_data += '<td>' + data.yCoordinate + '</td>';
-                satellite_data += '<td>' + data.comments + '</td>';
-                satellite_data += '</tr>';
-                $('#monitorPanelTable').append(satellite_data);
+
+                var prevId = '#' + prevX + '-' + prevY;
+                var nowId = '#' + data.xCoordinate + '-' + data.yCoordinate;
+                $(prevId).css('backgroundColor', '#FFFFFF');
+                $(nowId).css('backgroundColor', '#7FFF00');
+                prevX = data.xCoordinate;
+                prevY = data.yCoordinate;
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log(jqXHR);
