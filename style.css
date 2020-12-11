@@ -1,0 +1,21 @@
+#board {
+    border: 2px solid black;
+    height: 604px;
+    width: 604px;
+    padding: 0px;
+}
+
+.spot {
+    height: 50px;
+    width: 50px;
+    float: left;
+    border: 0.25px solid black;
+}
+
+.green {
+    background-color: chartreuse;
+}
+
+.red {
+    background-color: crimson;
+}
