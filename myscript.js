@@ -26,37 +26,25 @@ $(document).ready(function () {
         event.preventDefault();
     });
 
+    /**
+     * Ajax get request
+     * @param newUrl Url used to get data
+     */
     function startJsonSession(newUrl) {
         $.ajax({
             type: "GET",
             url: newUrl,
-            dataType: "jsonp",
             contentType: "application/json",
             crossDomain: true,
-            headers: {
-                'Access-Control-Allow-Credentials': true,
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': 'GET',
-                'Access-Control-Allow-Headers': 'application/json',
-            },
             success: function (data) {
-                // var satelliteId = data[0].satelliteId;
-                // alert(satelliteId);
                 console.log(data);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(jqXHR);
+                console.log(textStatus);
+                console.log(errorThrown);
             }
         });
-        // fetch(newUrl, {
-        //     method: 'GET',
-        //     body: JSON.stringify(data),
-        //     mode: 'cors',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         "Accept": 'application/json',
-        //     }
-        // })
-        //     .then((data) => data.json())
-        //     .then((resp) => console.log(resp))
-        //     .catch((err) => console.log(err))
     };
 
     /**
@@ -69,10 +57,5 @@ $(document).ready(function () {
         var newUrl = 'http://127.0.0.1:8001/add/' + $('#monitorSatelliteId').val() + "?&format=json&jsoncallback=?";
         console.log(newUrl);
         startJsonSession(newUrl);
-        // $.getJSON(newUrl, function (result) {
-        //     $.each(result, function (i, field) {
-        //         $("#monitorPanel").append(field + " ");
-        //     });
-        // });
     });
 });
