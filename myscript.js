@@ -3,7 +3,11 @@ var prevX = 0;
 var prevY = 0;
 
 /**
- * Creating a
+ * Creating a 12x12 grid for monitor panel.
+ * (0,0) :- bottom left corner
+ * (11,11) :- top right corner
+ * ids of each cell :- 'x-y'
+ *
  * @constructor
  */
 var Board = function () {
@@ -50,7 +54,7 @@ $(document).ready(function () {
     });
 
     /**
-     * Ajax get request
+     * Ajax get request for the satelliteMonitor
      * @param newUrl Url used to get data
      */
     function startJsonSession(newUrl) {
@@ -73,6 +77,7 @@ $(document).ready(function () {
                 console.log(jqXHR);
                 console.log(textStatus);
                 console.log(errorThrown);
+                $(prevId).css('backgroundColor', '#FFFFFF');
             }
         });
     };
@@ -89,5 +94,21 @@ $(document).ready(function () {
         startJsonSession(newUrl);
     });
 
+    $(`#satelliteDecommission`).submit(function (event) {
+        event.preventDefault();
+        var newUrl = 'http://127.0.0.1:8001/add/' +  $('#satelliteDecommissionId').val();
+
+        $.ajax({
+            type: 'DELETE',
+            url: newUrl,
+            success: function (result) {
+                // Look the current position from health check and remove it
+            }
+        })
+    });
+
+    /**
+     * Calling the board function.
+     */
     Board();
 });
