@@ -38,6 +38,15 @@ $(document).ready(function () {
             crossDomain: true,
             success: function (data) {
                 console.log(data);
+                var satellite_data = '';
+                satellite_data += '<tr>';
+                satellite_data += '<td>' + data.satelliteName + '</td>';
+                satellite_data += '<td>' + data.satelliteId + '</td>';
+                satellite_data += '<td>' + data.xCoordinate + '</td>';
+                satellite_data += '<td>' + data.yCoordinate + '</td>';
+                satellite_data += '<td>' + data.comments + '</td>';
+                satellite_data += '</tr>';
+                $('#monitorPanelTable').append(satellite_data);
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log(jqXHR);
