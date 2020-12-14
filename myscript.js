@@ -1,6 +1,7 @@
 var board = $('#board');
 var prevX = 0;
 var prevY = 0;
+var postUrlsList = ['http://127.0.0.1:8001/add/'];
 
 /**
  * Creating a 12x12 grid for monitor panel.
@@ -32,6 +33,7 @@ $(document).ready(function () {
      * sends data to the add microservice.
      */
     $(`#satelliteAdd`).submit(function (event) {
+        event.preventDefault();
 
         var formValues = {
             'satelliteName': $('input[name=satelliteName]').val(),
@@ -41,16 +43,27 @@ $(document).ready(function () {
             'comments': $('input[name=comments]').val()
         };
 
-        $.ajax({
-            type: 'POST',
-            url: 'http://127.0.0.1:8001/add/',
-            data: formValues,
-            dataType: 'json',
-            encode: true
-        }).done(function (data) {
-            console.log(data)
+        // $.ajax({
+        //     type: 'POST',
+        //     url: 'http://127.0.0.1:8001/add/',
+        //     data: formValues,
+        //     dataType: 'json',
+        //     encode: true
+        // }).done(function (data) {
+        //     console.log(data)
+        // });
+
+        $.each(postUrlsList, function (i, u) {
+            $.ajax(u, {
+                type: 'POST',
+                data: formValues,
+                dataType: 'json',
+                encode: true
+            }).done(function (data) {
+                console.log(data)
+            })
         });
-        event.preventDefault();
+
     });
 
     /**
@@ -94,9 +107,13 @@ $(document).ready(function () {
         startJsonSession(newUrl);
     });
 
+    /**
+     * triggers when when submit button of the satelliteDecommission is pressed
+     * removes the relevant id from microservices.
+     */
     $(`#satelliteDecommission`).submit(function (event) {
         event.preventDefault();
-        var newUrl = 'http://127.0.0.1:8001/add/' +  $('#satelliteDecommissionId').val();
+        var newUrl = 'http://127.0.0.1:8001/add/' + $('#satelliteDecommissionId').val();
 
         $.ajax({
             type: 'DELETE',
