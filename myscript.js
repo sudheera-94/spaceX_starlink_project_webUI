@@ -2,6 +2,7 @@ var board = $('#board');
 var prevX = 0;
 var prevY = 0;
 var postUrlsList = ['http://127.0.0.1:8001/add/'];
+var newUrl;
 
 /**
  * Creating a 12x12 grid for monitor panel.
@@ -102,9 +103,12 @@ $(document).ready(function () {
     $(`#satelliteMonitor`).submit(function (event) {
         event.preventDefault();
 
-        var newUrl = 'http://127.0.0.1:8001/add/' + $('#monitorSatelliteId').val() + "?&format=json&jsoncallback=?";
-        console.log(newUrl);
+        newUrl = 'http://127.0.0.1:8001/add/' + $('#monitorSatelliteId').val() + "?&format=json&jsoncallback=?";
+        // console.log(newUrl);
         startJsonSession(newUrl);
+
+        newUrl = 'http://127.0.0.1:8002/healthCheck/' + $('#monitorSatelliteId').val() + "?&format=json&jsoncallback=?";
+        poll(newUrl);
     });
 
     /**
@@ -123,6 +127,30 @@ $(document).ready(function () {
             }
         })
     });
+
+    var healthState = $(`#healthState`),
+        poll = function (newUrl) {
+            console.log(newUrl)
+            $.ajax({
+                type: "GET",
+                url: newUrl,
+                contentType: "application/json",
+                crossDomain: true,
+                success: function (data) {
+                    console.log(data);
+                    healthState.text(data.healthPercentage);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(jqXHR);
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                }
+            });
+        },
+
+        pollInterval = setInterval(function () {
+            poll(newUrl);
+        }, 10000);
 
     /**
      * Calling the board function.
