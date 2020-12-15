@@ -44,16 +44,6 @@ $(document).ready(function () {
             'comments': $('input[name=comments]').val()
         };
 
-        // $.ajax({
-        //     type: 'POST',
-        //     url: 'http://127.0.0.1:8001/add/',
-        //     data: formValues,
-        //     dataType: 'json',
-        //     encode: true
-        // }).done(function (data) {
-        //     console.log(data)
-        // });
-
         $.each(postUrlsList, function (i, u) {
             $.ajax(u, {
                 type: 'POST',
@@ -68,44 +58,15 @@ $(document).ready(function () {
     });
 
     /**
-     * Ajax get request for the satelliteMonitor
-     * @param newUrl Url used to get data
-     */
-    function startJsonSession(newUrl) {
-        $.ajax({
-            type: "GET",
-            url: newUrl,
-            contentType: "application/json",
-            crossDomain: true,
-            success: function (data) {
-                console.log(data);
-
-                var prevId = '#' + prevX + '-' + prevY;
-                var nowId = '#' + data.xCoordinate + '-' + data.yCoordinate;
-                $(prevId).css('backgroundColor', '#FFFFFF');
-                $(nowId).css('backgroundColor', '#7FFF00');
-                prevX = data.xCoordinate;
-                prevY = data.yCoordinate;
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log(jqXHR);
-                console.log(textStatus);
-                console.log(errorThrown);
-                $(prevId).css('backgroundColor', '#FFFFFF');
-            }
-        });
-    };
-
-    /**
      * triggers when submit button of the satelliteMonitor is pressed
      * gets data from the add microservice.
      */
     $(`#satelliteMonitor`).submit(function (event) {
         event.preventDefault();
 
-        newUrl = 'http://127.0.0.1:8001/add/' + $('#monitorSatelliteId').val() + "?&format=json&jsoncallback=?";
-        // console.log(newUrl);
-        startJsonSession(newUrl);
+        // var newUrl = 'http://127.0.0.1:8001/add/' + $('#monitorSatelliteId').val() + "?&format=json&jsoncallback=?";
+        // // console.log(newUrl);
+        // startJsonSession(newUrl);
 
         newUrl = 'http://127.0.0.1:8002/healthCheck/' + $('#monitorSatelliteId').val() + "?&format=json&jsoncallback=?";
         poll(newUrl);
@@ -130,7 +91,8 @@ $(document).ready(function () {
 
     var healthState = $(`#healthState`),
         poll = function (newUrl) {
-            console.log(newUrl)
+            console.log(newUrl);
+
             $.ajax({
                 type: "GET",
                 url: newUrl,
@@ -139,18 +101,49 @@ $(document).ready(function () {
                 success: function (data) {
                     console.log(data);
                     healthState.text(data.healthPercentage);
+
+                    var prevId = '#' + prevX + '-' + prevY;
+                    var nowId = '#' + data.xCoordinate + '-' + data.yCoordinate;
+                    $(prevId).css('backgroundColor', '#FFFFFF');
+                    $(nowId).css('backgroundColor', '#7FFF00');
+                    prevX = data.xCoordinate;
+                    prevY = data.yCoordinate;
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
+                    var prevId = '#' + prevX + '-' + prevY;
                     console.log(jqXHR);
                     console.log(textStatus);
                     console.log(errorThrown);
+                    $(prevId).css('backgroundColor', '#FFFFFF');
                 }
             });
         },
 
         pollInterval = setInterval(function () {
             poll(newUrl);
-        }, 10000);
+        }, 2000);
+
+
+    $(`#satelliteControl`).submit(function (event) {
+        event.preventDefault();
+
+        var formValues = {
+            'satelliteId': $("input[name=satelliteControlId]").val(),
+            'xVelocity': $("input[name=xVelocity]").val(),
+            'yVelocity': $("input[name=yVelocity]").val(),
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: 'http://127.0.0.1:8002/healthCheck/',
+            data: formValues,
+            dataType: 'json',
+            encode: true
+        }).done(function (data) {
+            console.log(data)
+        });
+
+    });
 
     /**
      * Calling the board function.
