@@ -1,7 +1,8 @@
 var board = $('#board');
 var prevX = 0;
 var prevY = 0;
-var postUrlsList = ['http://127.0.0.1:8000/add/'];
+var deploymentIp = "http://127.0.0.1";
+var postUrlsList = [deploymentIp + ':8000/add/'];
 var newUrl;
 
 /**
@@ -64,7 +65,7 @@ $(document).ready(function () {
     $(`#satelliteMonitor`).submit(function (event) {
         event.preventDefault();
 
-        newUrl = 'http://127.0.0.1:8000/add/' + $('#monitorSatelliteId').val() + "?&format=json&jsoncallback=?";
+        newUrl = deploymentIp + ':8000/add/' + $('#monitorSatelliteId').val() + "?&format=json&jsoncallback=?";
         poll(newUrl);
     });
 
@@ -74,7 +75,7 @@ $(document).ready(function () {
      */
     $(`#satelliteDecommission`).submit(function (event) {
         event.preventDefault();
-        var newUrl = 'http://127.0.0.1:8000/add/' + $('#satelliteDecommissionId').val();
+        var newUrl = deploymentIp + ':8000/add/' + $('#satelliteDecommissionId').val();
 
         $.ajax({
             type: 'DELETE',
@@ -131,7 +132,7 @@ $(document).ready(function () {
 
         $.ajax({
             type: 'POST',
-            url: 'http://127.0.0.1:8000/add/',
+            url: deploymentIp + ':8000/add/',
             data: formValues,
             dataType: 'json',
             encode: true
